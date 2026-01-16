@@ -234,6 +234,26 @@ export const flavorService = {
         });
         return res.data;
     },
+    recommendStrategy: async (
+        anchorId: string,
+        competitorIds: string[],
+        goal: string = "differentiate",
+        brandTone: string = "premium",
+        priceTier: string = "mid",
+        targetCustomer: string = "general"
+    ) => {
+        const res = await api.post('/v1/strategies/recommend', null, {
+            params: {
+                anchor_id: anchorId,
+                competitor_ids: competitorIds.join(','),
+                goal,
+                brand_tone: brandTone,
+                price_tier: priceTier,
+                target_customer: targetCustomer
+            }
+        });
+        return res.data;
+    },
 
     // --- Analysis ---
     getConflictMap: async (brandId: string, competitorIds: string[]) => {

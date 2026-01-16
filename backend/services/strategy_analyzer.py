@@ -2,6 +2,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from backend import models, schemas
 import statistics
+import logging
+
+logger = logging.getLogger(__name__)
 
 AXES = ["매운맛", "단맛", "감칠맛", "상큼함", "풍미"]
 
@@ -156,7 +159,76 @@ def _calculate_risks(anchor: list, strategy: dict, competitors: list) -> dict:
 
 def _generate_reasoning(anchor_name: str, strategy: dict, competitors: list, 
                        goal: schemas.StrategyGoal, kpi: dict, risks: dict) -> str:
-    """Generate human-readable reasoning"""
+    """Generate human-readable reasoning - tries LLM first, falls back to rule-based"""
+    
+    # Try LLM-based reasoning first
+    llm_reasoning = _generate_reasoning_with_llm(anchor_name, strategy, competitors, goal, kpi, risks)
+    if llm_reasoning:
+        return llm_reasoning
+    
+    # Fallback to rule-based reasoning
+    return _generate_reasoning_rule_based(anchor_name, strategy, competitors, goal, kpi, risks)
+
+
+def _generate_reasoning_with_llm(anchor_name: str, strategy: dict, competitors: list, 
+                                  goal: schemas.StrategyGoal, kpi: dict, risks: dict) -> str | None:
+    """Generate reasoning using LLM for more nuanced explanations"""
+    try:
+        from backend.services.local_llm import generate_chat
+        
+        mode_desc = {
+            "COPY": "복제 전략 (성공 공식 그대로 적용)",
+            "DISTANCE": "거리 조절 전략 (핵심 유지, 차별화)",
+            "REDIRECT": "방향 전환 전략 (경쟁 회피, 새로운 포지셔닝)"
+        }
+        
+        goal_desc = {
+            schemas.StrategyGoal.INCREASE_SALES: "매출 증대",
+            schemas.StrategyGoal.REDUCE_COST: "비용 절감",
+            schemas.StrategyGoal.DIFFERENTIATE: "브랜드 차별화"
+        }
+        
+        comp_names = ", ".join([c["name"] for c in competitors[:3]])
+        
+        system_prompt = """당신은 F&B 전략 컨설턴트입니다. 
+레시피 전략 분석 결과를 바탕으로 명확하고 실행 가능한 조언을 제공하세요.
+응답은 한국어로, 마크다운 형식으로 작성하세요."""
+
+        user_prompt = f"""다음 분석 결과를 바탕으로 전략 추천 이유를 설명해주세요:
+
+**대상 메뉴**: {anchor_name}
+**비교 경쟁사**: {comp_names}
+**목표**: {goal_desc.get(goal, str(goal))}
+**추천 전략**: {mode_desc.get(strategy['mode'], strategy['mode'])} (강도: {strategy['alpha']:.0%})
+
+**예상 KPI**:
+- 매출 변화: {kpi.get('sales_lift', 0):+.1%}
+- 비용 변화: {kpi.get('cost_delta', 0):+.1%}
+- 차별화 점수: {kpi.get('uniqueness_score', 0):.1%}
+
+**리스크**:
+- 브랜드 충돌: {risks.get('brand_conflict', 0):.0%}
+- 가격 미스매치: {risks.get('price_mismatch', 0):.0%}
+
+왜 이 전략이 최적인지, 실행 시 주의사항은 무엇인지 간결하게 설명해주세요."""
+
+        response = generate_chat([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ])
+        
+        if response and len(response) > 50:
+            return response
+        return None
+        
+    except Exception as e:
+        logger.warning(f"LLM reasoning failed: {e}")
+        return None
+
+
+def _generate_reasoning_rule_based(anchor_name: str, strategy: dict, competitors: list, 
+                                    goal: schemas.StrategyGoal, kpi: dict, risks: dict) -> str:
+    """Fallback rule-based reasoning generation"""
     
     mode_desc = {
         "COPY": "현재 맛을 유지하면서 미세 조정",

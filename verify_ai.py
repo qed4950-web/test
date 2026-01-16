@@ -65,7 +65,65 @@ def test_recipe_mutation():
     except Exception as e:
         print(f"❌ Test Failed: {e}")
 
+def test_strategy_recommendation():
+    print("\n--- Testing Strategy Recommendation (Level 3) ---")
+    
+    # First, get references to use
+    try:
+        refs_resp = requests.get(f"{BASE_URL}/v1/references/")
+        refs = refs_resp.json()
+        
+        anchors = [r for r in refs if r.get("reference_type") == "ANCHOR"]
+        brands = [r for r in refs if r.get("reference_type") == "BRAND"]
+        
+        if not anchors or not brands:
+            print("⚠️ No references found. Seeding demo data...")
+            requests.post(f"{BASE_URL}/v1/references/demo/seed")
+            refs_resp = requests.get(f"{BASE_URL}/v1/references/")
+            refs = refs_resp.json()
+            anchors = [r for r in refs if r.get("reference_type") == "ANCHOR"]
+            brands = [r for r in refs if r.get("reference_type") == "BRAND"]
+        
+        if not anchors or not brands:
+            print("❌ Still no references after seeding")
+            return
+        
+        anchor_id = anchors[0]["id"]
+        competitor_ids = brands[0]["id"]
+        
+        start = time.time()
+        resp = requests.post(
+            f"{BASE_URL}/v1/strategies/recommend",
+            params={
+                "anchor_id": anchor_id,
+                "competitor_ids": competitor_ids,
+                "goal": "differentiate",
+                "brand_tone": "premium",
+                "price_tier": "mid"
+            }
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        duration = time.time() - start
+        
+        print(f"Status: {resp.status_code} (took {duration:.2f}s)")
+        print(f"Recommended Mode: {data.get('recommendation', {}).get('mode')}")
+        print(f"Alpha: {data.get('recommendation', {}).get('alpha')}")
+        print(f"Confidence: {data.get('confidence')}")
+        
+        reasoning = data.get("reasoning", "")
+        print(f"Reasoning (first 100 chars): {reasoning[:100]}...")
+        
+        if data.get("recommendation", {}).get("mode"):
+            print("✅ Strategy Recommendation operational")
+        else:
+            print("❌ Strategy Recommendation returned incomplete data")
+            
+    except Exception as e:
+        print(f"❌ Test Failed: {e}")
+
 if __name__ == "__main__":
     print("Running AI Feature Verification...")
     test_vibe_analysis()
     test_recipe_mutation()
+    test_strategy_recommendation()

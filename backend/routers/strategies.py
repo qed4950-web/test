@@ -111,3 +111,74 @@ def get_strategy_reports(
             created_at=r.created_at
         ) for r in reports
     ]
+
+@router.post("/recommend")
+def recommend_strategy_endpoint(
+    anchor_id: str,
+    competitor_ids: str,  # comma-separated
+    goal: str = "differentiate",
+    brand_tone: str = "premium",
+    price_tier: str = "mid",
+    target_customer: str = "general",
+    org_id: str = "demo_org",
+    db: Session = Depends(get_db)
+):
+    """
+    AI-powered strategy recommendation with brand context.
+    
+    Args:
+        anchor_id: ID of the base reference (your menu)
+        competitor_ids: Comma-separated IDs of competitor references
+        goal: differentiate | increase_sales | reduce_cost
+        brand_tone: premium | casual | value | trendy
+        price_tier: low | mid | high
+        target_customer: general | family | young | business
+    
+    Returns:
+        Strategy recommendation with AI-generated reasoning
+    """
+    try:
+        # Parse goal
+        goal_map = {
+            "differentiate": schemas.StrategyGoal.DIFFERENTIATE,
+            "increase_sales": schemas.StrategyGoal.INCREASE_SALES,
+            "reduce_cost": schemas.StrategyGoal.REDUCE_COST
+        }
+        parsed_goal = goal_map.get(goal.lower(), schemas.StrategyGoal.DIFFERENTIATE)
+        
+        # Parse competitor IDs
+        comp_list = [cid.strip() for cid in competitor_ids.split(",") if cid.strip()]
+        
+        if not comp_list:
+            raise HTTPException(status_code=400, detail="At least one competitor_id required")
+        
+        report = analyze_strategy(
+            anchor_id=anchor_id,
+            competitor_ids=comp_list,
+            goal=parsed_goal,
+            org_id=org_id,
+            db=db
+        )
+        
+        return {
+            "status": "success",
+            "recommendation": {
+                "mode": report.recommended_mode,
+                "alpha": float(report.recommended_alpha),
+                "target_id": report.recommended_target_id
+            },
+            "kpi_predictions": report.kpi_predictions,
+            "risk_scores": report.risk_scores,
+            "reasoning": report.reasoning,
+            "confidence": float(report.confidence),
+            "context": {
+                "brand_tone": brand_tone,
+                "price_tier": price_tier,
+                "target_customer": target_customer
+            }
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
