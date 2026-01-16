@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Sora } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
+const sora = Sora({ subsets: ["latin"], variable: "--font-body" });
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
   title: "FlavorOS | Joomidang",
@@ -17,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex min-h-screen bg-gray-50 text-gray-900 font-sans`}>
+      <body className={`${sora.variable} ${fraunces.variable} flex min-h-screen bg-gray-50 text-gray-900 font-body`} suppressHydrationWarning>
         <Sidebar />
         <main className="flex-1 overflow-auto">
           {children}

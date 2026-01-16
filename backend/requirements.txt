@@ -4,3 +4,10 @@ sqlalchemy
 pymysql
 python-dotenv
 pydantic
+pyyaml
+pytest
+llama-cpp-python>=0.3.16,<0.4
+pandas
+openpyxl
+python-multipart
+pillow

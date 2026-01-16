@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from .. import models
+from .. import models
 from ..database import get_db
+from ..services.llm_reliability import llm_service
 
 router = APIRouter(
     prefix="/v1/alerts",
@@ -44,6 +46,17 @@ def check_deviation_alerts(db: Session = Depends(get_db)):
                     severity=severity,
                     message=f"{store.name} 편차 {deviation:.1f}% - 즉시 점검 필요"
                 )
+                
+                # AI Root Cause Analysis for Critical Alerts
+                if severity == 'CRITICAL':
+                    prompt = f"Store {store.name} deviation is {deviation}%. Logs: None. Estimate root cause."
+                    # Use LLM Service (with Cache!)
+                    try:
+                        analysis = llm_service.safe_generate(prompt, db=db)
+                        alert.root_cause_analysis = analysis.get("content", "No analysis")
+                    except Exception as e:
+                        alert.root_cause_analysis = f"Analysis failed: {str(e)}"
+                        
                 db.add(alert)
                 created_count += 1
     

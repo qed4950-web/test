@@ -43,7 +43,7 @@ def seed_data():
         version=1,
         # 12-axis: Salt, Sweet, Sour, Bitter, Umami, Fat, Crisp, Juicy, Fire, Garlic, Fermented, Spice
         vector=[85.0, 45.0, 20.0, 15.0, 120.0, 95.0, 110.0, 88.0, 130.0, 75.0, 35.0, 40.0],
-        metrics_json={"addictiveness": 92, "satiety": 85, "repeat_desire": 95},
+        metrics_json={"addictiveness": 92, "satiety": 85, "repeat": 95},
         notes="Famous BBQ - 불향 + 감칠맛 + 바삭함 강점"
     )
     db.add(fp1)
@@ -65,7 +65,7 @@ def seed_data():
         version=1,
         # 12-axis: Salt, Sweet, Sour, Bitter, Umami, Fat, Crisp, Juicy, Fire, Garlic, Fermented, Spice
         vector=[70.0, 55.0, 25.0, 10.0, 85.0, 75.0, 65.0, 70.0, 60.0, 80.0, 45.0, 30.0],
-        metrics_json={"addictiveness": 68, "satiety": 72, "repeat_desire": 70},
+        metrics_json={"addictiveness": 68, "satiety": 72, "repeat": 70},
         notes="MyBrand Standard - 균형 잡힌 기본맛"
     )
     db.add(fp2)

@@ -47,6 +47,13 @@ def calculate_target_vector(
             result[2] += 20.0 # Boost 3rd dim
         elif direction == 'savory' and length > 5:
             result[5] += 20.0 # Boost 6th dim (Umami)
+        elif direction == 'signature':
+            if length > 0:
+                result[0] += 8.0
+            if length > 4:
+                result[4] += 12.0
+            if length > 8:
+                result[8] += 10.0
             
         return result
     

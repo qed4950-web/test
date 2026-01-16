@@ -1,13 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 249, 250, 251;
-  /* Gray-50 */
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 15, 23, 42;
+  /* Slate-900 */
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 248, 250, 252;
+  /* Slate-50 */
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: white;
+  background: #ffffff;
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+  letter-spacing: -0.01em;
+}
+
+.font-body {
+  font-family: var(--font-body), sans-serif;
 }

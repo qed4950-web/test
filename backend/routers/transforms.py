@@ -4,6 +4,7 @@ from typing import List
 import uuid
 from .. import models, schemas
 from ..database import get_db
+from ..services import strategy_engine
 
 router = APIRouter(
     prefix="/v1/transforms",
@@ -67,12 +68,16 @@ def process_transform(transform_id: str):
         db.add(new_recipe)
         db.commit()
 
+        # Predict KPIs
+        predicted_kpis = strategy_engine.predict_kpis(target_vector, transform.mode)
+
         # Create Result Version
         new_version = models.RecipeVersion(
             recipe_id=new_recipe.id,
             version_label="v1.0.1-auto",
             spec_yaml=recipe_yaml,
             fingerprint_vector=target_vector,
+            predicted_kpi_json=predicted_kpis,
             created_from_transform_id=transform.id
         )
         db.add(new_version)
@@ -97,7 +102,21 @@ def create_transform(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
-    db_transform = models.Transform(**transform.dict(), status='QUEUED')
+    # Calculate risks upfront
+    risk_factors = {}
+    if transform.reference_1_id and transform.reference_2_id:
+        risk_factors = strategy_engine.calculate_risks(
+            transform.reference_1_id,
+            transform.reference_2_id,
+            transform.mode,
+            db
+        )
+
+    db_transform = models.Transform(
+        **transform.dict(exclude={'risk_factors_json'}), 
+        status='QUEUED',
+        risk_factors_json=risk_factors
+    )
     db.add(db_transform)
     db.commit()
     db.refresh(db_transform)

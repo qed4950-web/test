@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List, Optional
-import os
+from ..services.local_llm import generate_json
 
 router = APIRouter(
     prefix="/v1/ai",
@@ -58,12 +58,34 @@ DEMO_PERSONAS = [
 async def interpret_distance(req: InterpretRequest):
     """AI Distance Interpretation - Level 2"""
     
-    api_key = os.getenv("OPENAI_API_KEY")
-    
-    if api_key and api_key != "your-api-key-here":
-        # Real OpenAI call would go here
-        # For now, return demo response
-        pass
+    system_prompt = (
+        "You are a culinary analytics assistant. "
+        "Return JSON only with keys: interpretation, strategy_recommendation."
+    )
+    user_prompt = (
+        "Interpret the flavor gap and recommend a strategy.\n"
+        f"Reference 1: {req.reference1_name}\n"
+        f"Reference 2: {req.reference2_name}\n"
+        f"Gap Top3: {req.gap_top3}\n"
+        f"Addictiveness Diff: {req.addictiveness_diff}\n"
+        f"Selected Strategy: {req.selected_strategy or ''}\n"
+        "Output JSON with:\n"
+        "- interpretation: short markdown analysis\n"
+        "- strategy_recommendation: short label"
+    )
+
+    llm_response = generate_json([
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ])
+    if isinstance(llm_response, dict):
+        interpretation = llm_response.get("interpretation")
+        recommendation = llm_response.get("strategy_recommendation")
+        if interpretation and recommendation:
+            return InterpretResponse(
+                interpretation=str(interpretation),
+                strategy_recommendation=str(recommendation),
+            )
     
     # Demo response
     gap1 = req.gap_top3[0] if len(req.gap_top3) > 0 else {"label": "감칠맛", "diff": 20}
@@ -89,14 +111,30 @@ async def interpret_distance(req: InterpretRequest):
 async def simulate_customer_reaction(req: SimulationRequest):
     """AI Customer Simulation - Level 4"""
     
-    api_key = os.getenv("OPENAI_API_KEY")
-    
-    if api_key and api_key != "your-api-key-here":
-        # Real OpenAI call would go here
-        pass
+    system_prompt = (
+        "You are a customer insight simulator. "
+        "Return JSON only with a key: personas (list)."
+    )
+    user_prompt = (
+        "Simulate customer reactions to a menu strategy.\n"
+        f"Strategy: {req.strategy}\n"
+        f"Flavor Profile: {req.flavor_profile}\n"
+        "Output JSON with:\n"
+        "- personas: list of {type, quote, repeat_rate?, price_resistance?, word_of_mouth?}"
+    )
+
+    llm_response = generate_json([
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ])
+    if isinstance(llm_response, dict):
+        personas = llm_response.get("personas")
+        if isinstance(personas, list) and personas:
+            return SimulationResponse(personas=personas)
     
     # Demo response with customization based on strategy
     personas = DEMO_PERSONAS.copy()
+    
     
     if req.strategy == "SIGNATURE":
         personas[0]["quote"] = "새로운데 익숙한 맛이야"
@@ -106,3 +144,20 @@ async def simulate_customer_reaction(req: SimulationRequest):
         personas[1]["quote"] = "유명한 집 느낌이 나"
     
     return SimulationResponse(personas=personas)
+
+# --- Level 5: Recipe Mutation ---
+from ..services.mutation_service import mutate_recipe
+
+class MutationRequest(BaseModel):
+    recipe: dict # Full recipe object
+    strategy: str # e.g. "Spicy", "Vegan", "Premium"
+    intensity: int = 50 # 0-100
+
+class MutationResponse(BaseModel):
+    mutated_recipe: dict
+
+@router.post("/mutate", response_model=MutationResponse)
+async def mutate_recipe_endpoint(req: MutationRequest):
+    """AI Recipe Mutation - Level 5"""
+    result = mutate_recipe(req.recipe, req.strategy, req.intensity)
+    return MutationResponse(mutated_recipe=result)
