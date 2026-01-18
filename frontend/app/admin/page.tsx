@@ -741,7 +741,7 @@ export default function AdminPage() {
             {/* Vibe Lab Content */}
             <div className="flex gap-4 items-end">
               <div className="flex-1">
-                <label className="text-xs text-zinc-400 block mb-1">Target Atmosphere</label>
+                <label className="text-xs text-slate-500 block mb-1">Target Atmosphere</label>
                 <div className="grid grid-cols-4 gap-2" id="vibe-target-atmosphere">
                   {["Chill", "Energetic", "Focus", "Romantic"].map(mode => (
                     <button
@@ -751,7 +751,7 @@ export default function AdminPage() {
                         "py-3 rounded-xl text-sm font-medium border transition-all",
                         vibeMode === mode
                           ? "bg-indigo-600 border-indigo-500 text-white shadow-sm"
-                          : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       )}
                     >
                       {mode}
@@ -760,11 +760,11 @@ export default function AdminPage() {
                 </div>
               </div>
               <div className="w-1/3">
-                <label className="text-xs text-zinc-400 block mb-1">Time Era (Time Machine)</label>
+                <label className="text-xs text-slate-500 block mb-1">Time Era (Time Machine)</label>
                 <select
                   value={targetEra}
                   onChange={(e) => setTargetEra(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 text-zinc-100 rounded-xl py-3 px-4 text-sm font-medium appearance-none cursor-pointer hover:bg-zinc-700 transition-colors focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl py-3 px-4 text-sm font-medium appearance-none cursor-pointer hover:bg-slate-100 transition-colors focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                 >
                   <option value="Modern">Modern (Current)</option>
                   <option value="1990s">1990s Retro</option>
@@ -779,7 +779,7 @@ export default function AdminPage() {
                 id="vibe-recommend-btn"
                 onClick={recommendVibe}
                 disabled={vibeBusy}
-                className="flex-1 py-4 bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-xl font-medium flex justify-center items-center gap-2 hover:bg-zinc-700 transition-colors disabled:opacity-50"
+                className="flex-1 py-4 bg-slate-100 border border-slate-200 text-slate-700 rounded-xl font-medium flex justify-center items-center gap-2 hover:bg-slate-200 transition-colors disabled:opacity-50"
               >
                 {vibeRecLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                 AI Recommend
@@ -793,7 +793,7 @@ export default function AdminPage() {
                   vibeAnalysisLoading ? "bg-indigo-600/50 border-indigo-500" :
                     vibeResult && !playlist && !vibeAnalysisLoading
                       ? "bg-indigo-600 text-white shadow-md border-indigo-500"
-                      : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                      : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900"
                 )}
               >
                 {vibeAnalysisLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
@@ -806,8 +806,8 @@ export default function AdminPage() {
                   "flex-1 py-4 rounded-xl font-medium flex justify-center items-center gap-2 transition-colors disabled:opacity-50 border",
                   playlistLoading ? "bg-indigo-600/50 border-indigo-500" :
                     playlist && !playlistLoading
-                      ? "bg-zinc-800 text-white border-zinc-600"
-                      : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-white"
+                      ? "bg-slate-200 text-slate-800 border-slate-300"
+                      : "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900"
                 )}
               >
                 {playlistLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Calendar className="w-5 h-5" />}
@@ -849,19 +849,19 @@ export default function AdminPage() {
             </div>
 
             {vibeRecommendation && (
-              <div className="text-xs text-gray-400 bg-gray-900/40 border border-gray-700 rounded-lg px-3 py-2">
+              <div className="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
                 {vibeRecommendation}
               </div>
             )}
 
             {vibeHistory.length > 0 && (
-              <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-4 mt-6">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-6">
                 <div className="flex items-center justify-between mb-3 px-1">
-                  <div className="flex items-center gap-2 text-sm font-bold text-gray-400">
+                  <div className="flex items-center gap-2 text-sm font-bold text-slate-600">
                     <History className="w-4 h-4" />
                     <span>최근 추천 기록</span>
                   </div>
-                  <span className="text-[10px] text-gray-500">클릭하여 큐레이션 실행</span>
+                  <span className="text-[10px] text-slate-500">클릭하여 큐레이션 실행</span>
                 </div>
                 <div className="space-y-2">
                   {vibeHistory.map((item, index) => (
@@ -871,23 +871,23 @@ export default function AdminPage() {
                         await runVibeAnalysisWith(item.mode, item.era);
                         setVibeRecommendation(item.message);
                       }}
-                      className="group w-full flex items-center justify-between bg-gray-800/60 border border-gray-700/50 rounded-xl px-4 py-3 hover:bg-gray-700 hover:border-indigo-500/50 hover:shadow-lg transition-all text-left"
+                      className="group w-full flex items-center justify-between bg-white border border-slate-200 rounded-xl px-4 py-3 hover:bg-slate-50 hover:border-indigo-500 hover:shadow-lg transition-all text-left"
                     >
                       <div className="flex flex-col gap-0.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-200 group-hover:text-white transition-colors">
+                          <span className="text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">
                             {item.mode}
                           </span>
-                          <span className="text-xs text-gray-500">•</span>
-                          <span className="text-xs text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20">
+                          <span className="text-xs text-slate-400">•</span>
+                          <span className="text-xs text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
                             {item.era}
                           </span>
                         </div>
-                        <div className="text-[10px] text-gray-500">
+                        <div className="text-[10px] text-slate-500">
                           {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                       </div>
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700/50 text-gray-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-500 group-hover:bg-indigo-600 group-hover:text-white transition-all">
                         <RotateCcw className="w-4 h-4" />
                       </div>
                     </button>
@@ -902,23 +902,23 @@ export default function AdminPage() {
                 {/* 1. Executive Summary Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* DNA & Synergy */}
-                  <div className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 flex flex-col justify-between shadow-sm">
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 flex flex-col justify-between shadow-sm">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-sm font-bold flex items-center gap-2 text-zinc-300">
-                          <Dna className="w-4 h-4 text-purple-400" />
+                        <h3 className="text-sm font-bold flex items-center gap-2 text-slate-700">
+                          <Dna className="w-4 h-4 text-purple-500" />
                           Sensory DNA
                         </h3>
-                        <p className="text-xs text-zinc-500 mt-1">{vibeResult.dna}</p>
+                        <p className="text-xs text-slate-500 mt-1">{vibeResult.dna}</p>
                       </div>
                       <div className="flex flex-col items-end">
                         <span className={clsx(
                           "text-xs font-bold px-2 py-1 rounded border",
-                          vibeResult.synergy.score >= 90 ? "bg-emerald-900/30 text-emerald-400 border-emerald-500/30" : "bg-blue-900/30 text-blue-300 border-blue-500/30"
+                          vibeResult.synergy.score >= 90 ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-blue-50 text-blue-600 border-blue-200"
                         )}>
                           {vibeResult.synergy.status}
                         </span>
-                        <span className="text-2xl font-bold text-white mt-1">{vibeResult.synergy.score}%</span>
+                        <span className="text-2xl font-bold text-slate-800 mt-1">{vibeResult.synergy.score}%</span>
                       </div>
                     </div>
 
@@ -933,16 +933,16 @@ export default function AdminPage() {
                   </div>
 
                   {/* Recharts - Risk Radar */}
-                  <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-800 shadow-sm flex flex-col">
-                    <h3 className="text-sm font-bold flex items-center gap-2 text-zinc-300">
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                    <h3 className="text-sm font-bold flex items-center gap-2 text-slate-700">
                       <Radar className="w-4 h-4 text-pink-500" />
                       Risk Radar
                     </h3>
                     <div className="flex-1 min-h-[160px] text-xs">
                       <ResponsiveContainer width="100%" height="100%">
                         <RadarChart cx="50%" cy="50%" outerRadius="70%" data={vibeResult.risk}>
-                          <PolarGrid stroke="#27272a" />
-                          <PolarAngleAxis dataKey="subject" tick={{ fill: '#71717a', fontSize: 10 }} />
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10 }} />
                           <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                           <RechartsRadar
                             name="Risk"
@@ -960,69 +960,69 @@ export default function AdminPage() {
                 {/* 2. Sensory Specs Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Visual */}
-                  <div className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4 text-zinc-300">
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4 text-slate-700">
                       <Palette className="w-4 h-4" />
                       <span className="font-bold text-sm">Visual Palette</span>
                     </div>
                     <div className="flex gap-3 justify-center py-6">
                       {vibeResult.colors.map((c: string, i: number) => (
                         <div key={i} className="group relative">
-                          <div className="w-14 h-14 rounded-full shadow-lg transform group-hover:scale-110 transition-transform ring-2 ring-zinc-800 group-hover:ring-white" style={{ backgroundColor: c }} />
-                          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1 rounded">{c}</span>
+                          <div className="w-14 h-14 rounded-full shadow-lg transform group-hover:scale-110 transition-transform ring-2 ring-slate-200 group-hover:ring-indigo-500" style={{ backgroundColor: c }} />
+                          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white px-1 rounded shadow">{c}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Auditory */}
-                  <div className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 shadow-sm relative overflow-hidden group">
-                    <div className="flex items-center gap-2 mb-4 text-zinc-300">
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm relative overflow-hidden group">
+                    <div className="flex items-center gap-2 mb-4 text-slate-700">
                       <Music className="w-4 h-4" />
                       <span className="font-bold text-sm">Auditory Landscape</span>
                     </div>
 
                     <div className="flex flex-col items-center justify-center py-2 z-10 relative">
                       <div className="relative">
-                        <div className="w-20 h-20 rounded-full bg-zinc-950 border-4 border-zinc-800 flex items-center justify-center mb-4 shadow-xl group-hover:animate-[spin_4s_linear_infinite]">
-                          <div className="absolute inset-0 rounded-full border border-zinc-900" />
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-500" />
+                        <div className="w-20 h-20 rounded-full bg-slate-100 border-4 border-slate-200 flex items-center justify-center mb-4 shadow-xl group-hover:animate-[spin_4s_linear_infinite]">
+                          <div className="absolute inset-0 rounded-full border border-slate-300" />
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500" />
                         </div>
-                        <div className="absolute -top-2 -right-2 bg-cyan-900 text-cyan-200 text-[10px] px-1.5 py-0.5 rounded-full border border-cyan-700 font-mono">
+                        <div className="absolute -top-2 -right-2 bg-cyan-100 text-cyan-700 text-[10px] px-1.5 py-0.5 rounded-full border border-cyan-200 font-mono">
                           {vibeResult.music.bpm} BPM
                         </div>
                       </div>
 
-                      <div className="font-bold text-sm text-white">{vibeResult.music.track}</div>
-                      <div className="text-xs text-zinc-500">{vibeResult.music.genre}</div>
+                      <div className="font-bold text-sm text-slate-800">{vibeResult.music.track}</div>
+                      <div className="text-xs text-slate-500">{vibeResult.music.genre}</div>
                     </div>
 
                     {/* Equalizer Viz */}
                     <div className="absolute bottom-0 left-0 right-0 h-10 flex gap-1 items-end justify-center opacity-20 group-hover:opacity-40 transition-opacity px-6">
                       {[...Array(12)].map((_, i) => (
-                        <div key={i} className="flex-1 bg-zinc-500 rounded-t-sm animate-pulse" style={{ height: `${20 + Math.random() * 80}%`, animationDelay: `${i * 0.1}s` }} />
+                        <div key={i} className="flex-1 bg-slate-400 rounded-t-sm animate-pulse" style={{ height: `${20 + Math.random() * 80}%`, animationDelay: `${i * 0.1}s` }} />
                       ))}
                     </div>
                   </div>
 
                   {/* Olfactory */}
-                  <div className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 shadow-sm">
-                    <div className="flex items-center gap-2 mb-4 text-zinc-300">
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4 text-slate-700">
                       <Wind className="w-4 h-4" />
                       <span className="font-bold text-sm">Olfactory Pyramid</span>
                     </div>
                     <div className="space-y-4 relative">
                       <div className="flex flex-col gap-1">
-                        <div className="text-center p-1 bg-emerald-900/20 border border-emerald-500/20 rounded text-xs text-emerald-100 w-1/3 mx-auto">
+                        <div className="text-center p-1 bg-emerald-50 border border-emerald-200 rounded text-xs text-emerald-700 w-1/3 mx-auto">
                           <span className="block text-[9px] text-emerald-500 uppercase tracking-wider">Top</span>
                           {vibeResult.scent.top}
                         </div>
-                        <div className="text-center p-1.5 bg-emerald-900/30 border border-emerald-500/20 rounded text-xs text-emerald-200 w-2/3 mx-auto">
+                        <div className="text-center p-1.5 bg-emerald-100 border border-emerald-200 rounded text-xs text-emerald-700 w-2/3 mx-auto">
                           <span className="block text-[9px] text-emerald-500 uppercase tracking-wider">Middle</span>
                           {vibeResult.scent.middle}
                         </div>
-                        <div className="text-center p-2 bg-emerald-900/40 border border-emerald-500/20 rounded text-sm font-medium text-emerald-300 w-full mx-auto">
-                          <span className="block text-[9px] text-emerald-500 uppercase tracking-wider">Base</span>
+                        <div className="text-center p-2 bg-emerald-200 border border-emerald-300 rounded text-sm font-medium text-emerald-800 w-full mx-auto">
+                          <span className="block text-[9px] text-emerald-600 uppercase tracking-wider">Base</span>
                           {vibeResult.scent.base}
                         </div>
                       </div>
@@ -1031,8 +1031,8 @@ export default function AdminPage() {
                 </div>
 
                 {/* 3. AI Persona Simulation */}
-                <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 shadow-sm">
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-indigo-400 mb-6">
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h3 className="text-sm font-bold flex items-center gap-2 text-indigo-600 mb-6">
                     <MessageCircle className="w-4 h-4" />
                     Real-time Customer Simulation
                   </h3>
@@ -1043,19 +1043,19 @@ export default function AdminPage() {
                         { "delay-0": i === 0, "delay-150": i === 1, "delay-300": i === 2 }
                       )}>
                         <div className="flex flex-col items-center gap-1 min-w-[60px]">
-                          <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-zinc-800">
+                          <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-2 ring-indigo-100">
                             {p.initial}
                           </div>
                         </div>
-                        <div className="relative bg-zinc-800 p-4 rounded-2xl rounded-tl-none border border-zinc-700 shadow-sm flex-1">
-                          <div className="absolute -top-2 left-0 text-[10px] text-zinc-400 bg-zinc-900 px-2 rounded-full border border-zinc-700">
+                        <div className="relative bg-slate-50 p-4 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm flex-1">
+                          <div className="absolute -top-2 left-0 text-[10px] text-slate-500 bg-white px-2 rounded-full border border-slate-200">
                             {p.name}
                           </div>
-                          <p className="text-sm text-zinc-200 leading-relaxed">
+                          <p className="text-sm text-slate-700 leading-relaxed">
                             "{p.comment}"
                           </p>
                           <div className="mt-2 flex gap-2">
-                            <span className="text-[10px] px-1.5 py-0.5 bg-zinc-900 rounded text-zinc-400 border border-zinc-700">
+                            <span className="text-[10px] px-1.5 py-0.5 bg-white rounded text-slate-500 border border-slate-200">
                               ❤️ {p.likes}
                             </span>
                           </div>
@@ -1069,36 +1069,36 @@ export default function AdminPage() {
             )}
             {playlist && (
               <div className="mt-8 space-y-4 animate-in fade-in slide-in-from-bottom-8">
-                <h3 className="text-lg font-bold flex items-center gap-2 mb-4 text-white">
-                  <Clock className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-lg font-bold flex items-center gap-2 mb-4 text-slate-800">
+                  <Clock className="w-5 h-5 text-indigo-500" />
                   Daily Sensory Schedule
                 </h3>
-                <div className="relative border-l-2 border-zinc-800 ml-4 pl-8 pb-4 space-y-8">
+                <div className="relative border-l-2 border-slate-200 ml-4 pl-8 pb-4 space-y-8">
                   {playlist.map((item, idx) => (
                     <div key={idx} className="relative">
                       {/* Timeline Dot */}
-                      <div className="absolute -left-[39px] top-0 w-5 h-5 rounded-full bg-zinc-950 border-2 border-indigo-500 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-indigo-400" />
+                      <div className="absolute -left-[39px] top-0 w-5 h-5 rounded-full bg-white border-2 border-indigo-500 flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500" />
                       </div>
 
-                      <div className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 hover:border-indigo-500/50 transition-colors shadow-sm">
+                      <div className="bg-white p-5 rounded-xl border border-slate-200 hover:border-indigo-500 transition-colors shadow-sm">
                         <div className="flex justify-between items-start mb-3">
                           <div>
-                            <span className="text-indigo-400 font-mono text-sm font-bold">{item.time}</span>
-                            <h4 className="text-lg font-bold text-white">{item.label}</h4>
+                            <span className="text-indigo-600 font-mono text-sm font-bold">{item.time}</span>
+                            <h4 className="text-lg font-bold text-slate-800">{item.label}</h4>
                           </div>
                           <div className="gap-2 hidden md:flex">
                             {item.colors.map((c: string) => (
-                              <div key={c} className="w-6 h-6 rounded-full ring-1 ring-white/10" style={{ backgroundColor: c }} />
+                              <div key={c} className="w-6 h-6 rounded-full ring-1 ring-slate-200" style={{ backgroundColor: c }} />
                             ))}
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div className="flex items-center gap-2 text-zinc-400">
+                          <div className="flex items-center gap-2 text-slate-600">
                             <Headphones className="w-3 h-3 text-cyan-500" />
                             <span>{item.music.track}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-zinc-400">
+                          <div className="flex items-center gap-2 text-slate-600">
                             <Wind className="w-3 h-3 text-emerald-500" />
                             <span>{item.scent.top} + {item.scent.base}</span>
                           </div>
