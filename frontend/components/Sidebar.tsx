@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Dna, Sparkles, FlaskConical, Home } from 'lucide-react';
+import { Home, Dna, Palette, FlaskConical } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
     { name: '홈', href: '/', icon: Home },
-    { name: 'Flavor DNA', href: '/flavor-dna', icon: Dna },
-    { name: 'Vibe Lab', href: '/vibe-lab', icon: Sparkles },
+    { name: 'Flavor DNA', href: '/dna', icon: Dna },
+    { name: 'Vibe Lab', href: '/vibe', icon: Palette },
     { name: 'AI Experiment', href: '/experiment', icon: FlaskConical },
 ];
 
