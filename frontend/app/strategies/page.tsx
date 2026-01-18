@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Layers, Play, Loader2, FileText, TrendingUp, AlertTriangle, Target, Crosshair, Users } from 'lucide-react';
+import { Layers, Play, Loader2, FileText, TrendingUp, AlertTriangle, Target, Crosshair, Users, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
 import { flavorService, Reference, StrategyReport } from "../../services/api";
 import Link from "next/link";
@@ -20,6 +20,8 @@ export default function StrategiesPage() {
     const [selectedAnchor, setSelectedAnchor] = useState<string>("");
     const [selectedCompetitors, setSelectedCompetitors] = useState<string[]>([]);
     const [selectedGoal, setSelectedGoal] = useState<string>("differentiate");
+    const [isQuickRecommending, setIsQuickRecommending] = useState(false);
+    const [quickResult, setQuickResult] = useState<any>(null);
 
     useEffect(() => {
         fetchData();
@@ -115,6 +117,31 @@ export default function StrategiesPage() {
             console.error(err);
             setStreamingLog("스트리밍 연결 실패");
             setIsStreaming(false);
+        }
+    };
+
+    const runQuickRecommend = async () => {
+        if (!selectedAnchor || selectedCompetitors.length === 0) {
+            setNotice({ tone: "warning", message: "앵커와 경쟁사를 선택해주세요." });
+            return;
+        }
+
+        setIsQuickRecommending(true);
+        setQuickResult(null);
+
+        try {
+            const result = await flavorService.recommendStrategy(
+                selectedAnchor,
+                selectedCompetitors,
+                selectedGoal
+            );
+            setQuickResult(result);
+            setNotice({ tone: "success", message: "AI 추천 완료!" });
+        } catch (err) {
+            console.error(err);
+            setNotice({ tone: "error", message: "AI 추천 실패" });
+        } finally {
+            setIsQuickRecommending(false);
         }
     };
 
@@ -246,7 +273,53 @@ export default function StrategiesPage() {
                         {isStreaming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                         {isStreaming ? "분석 중..." : "분석 실행"}
                     </button>
+
+                    {/* AI Quick Recommend Button */}
+                    <button
+                        onClick={runQuickRecommend}
+                        disabled={isQuickRecommending || isStreaming || !selectedAnchor || selectedCompetitors.length === 0}
+                        className={clsx(
+                            "w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all transform hover:scale-[1.01] active:scale-[0.99] mt-3",
+                            isQuickRecommending
+                                ? "bg-amber-100 text-amber-600 cursor-not-allowed border border-amber-200"
+                                : !selectedAnchor || selectedCompetitors.length === 0
+                                    ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+                                    : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md hover:shadow-lg hover:from-amber-400 hover:to-orange-400"
+                        )}
+                    >
+                        {isQuickRecommending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                        {isQuickRecommending ? "AI 추천 중..." : "⚡ AI 빠른 추천"}
+                    </button>
                 </div>
+
+                {/* Quick Result Display */}
+                {quickResult && (
+                    <div className="mt-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 shadow-sm">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Sparkles className="w-5 h-5 text-amber-600" />
+                            <h3 className="font-bold text-amber-800">AI 추천 결과</h3>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                            <div className="bg-white rounded-lg p-3 border border-amber-100">
+                                <div className="text-xs text-amber-600 font-medium">추천 전략</div>
+                                <div className="text-lg font-bold text-amber-900">{quickResult.recommendation?.mode}</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-3 border border-amber-100">
+                                <div className="text-xs text-amber-600 font-medium">강도 (Alpha)</div>
+                                <div className="text-lg font-bold text-amber-900">{(quickResult.recommendation?.alpha * 100).toFixed(0)}%</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-3 border border-amber-100">
+                                <div className="text-xs text-amber-600 font-medium">신뢰도</div>
+                                <div className="text-lg font-bold text-amber-900">{(quickResult.confidence * 100).toFixed(0)}%</div>
+                            </div>
+                        </div>
+                        {quickResult.reasoning && (
+                            <div className="text-sm text-amber-800 bg-white/50 rounded-lg p-4 border border-amber-100 whitespace-pre-wrap">
+                                {quickResult.reasoning}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Live Console */}

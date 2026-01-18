@@ -57,35 +57,49 @@ DEMO_PERSONAS = [
 @router.post("/interpret", response_model=InterpretResponse)
 async def interpret_distance(req: InterpretRequest):
     """AI Distance Interpretation - Level 2"""
+    from ..services.local_llm import generate_chat
+    import json
+    import re
     
-    system_prompt = (
-        "You are a culinary analytics assistant. "
-        "Return JSON only with keys: interpretation, strategy_recommendation."
-    )
-    user_prompt = (
-        "Interpret the flavor gap and recommend a strategy.\n"
-        f"Reference 1: {req.reference1_name}\n"
-        f"Reference 2: {req.reference2_name}\n"
-        f"Gap Top3: {req.gap_top3}\n"
-        f"Addictiveness Diff: {req.addictiveness_diff}\n"
-        f"Selected Strategy: {req.selected_strategy or ''}\n"
-        "Output JSON with:\n"
-        "- interpretation: short markdown analysis\n"
-        "- strategy_recommendation: short label"
-    )
+    system_prompt = """당신은 F&B 맛 분석 전문가입니다.
+두 레시피 간의 맛 차이를 분석하고, 왜 이 차이가 중요한지 설명해주세요.
+마크다운 형식으로 분석 결과를 작성하세요."""
 
-    llm_response = generate_json([
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt},
-    ])
-    if isinstance(llm_response, dict):
-        interpretation = llm_response.get("interpretation")
-        recommendation = llm_response.get("strategy_recommendation")
-        if interpretation and recommendation:
-            return InterpretResponse(
-                interpretation=str(interpretation),
-                strategy_recommendation=str(recommendation),
-            )
+    user_prompt = f"""다음 맛 비교 데이터를 분석해주세요:
+
+**레퍼런스 1 (성공 맛집)**: {req.reference1_name}
+**레퍼런스 2 (내 브랜드)**: {req.reference2_name}
+
+**맛 차이 Top 3**:
+{chr(10).join([f"- {g.get('label', '미정')}: {g.get('diff', 0):+.1f}" for g in req.gap_top3])}
+
+**중독성 차이**: {req.addictiveness_diff:+.0f}점
+
+다음을 설명해주세요:
+1. 왜 이 차이가 매출에 영향을 주는지
+2. 어떤 전략(Copy/Distance/Redirect)을 추천하는지
+3. 구체적인 실행 방안
+
+다음 JSON 형식으로 응답하세요:
+{{"interpretation": "마크다운 분석 텍스트", "strategy_recommendation": "추천 전략명"}}"""
+
+    try:
+        response = generate_chat([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ])
+        
+        if response:
+            json_match = re.search(r'\{[^{}]*\}', response, re.DOTALL)
+            if json_match:
+                result = json.loads(json_match.group(0))
+                if result.get("interpretation") and result.get("strategy_recommendation"):
+                    return InterpretResponse(
+                        interpretation=str(result["interpretation"]),
+                        strategy_recommendation=str(result["strategy_recommendation"]),
+                    )
+    except Exception as e:
+        pass  # Fall through to demo response
     
     # Demo response
     gap1 = req.gap_top3[0] if len(req.gap_top3) > 0 else {"label": "감칠맛", "diff": 20}
