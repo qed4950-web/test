@@ -1,18 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --foreground-rgb: 15, 23, 42;
-  /* Slate-900 */
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 248, 250, 252;
-  /* Slate-50 */
+  /* Warm Flavor Theme */
+  --foreground-rgb: 67, 20, 7;
+  /* Orange-950 */
+  --background-start-rgb: 255, 251, 235;
+  /* Amber-50 */
+  --background-end-rgb: 255, 247, 237;
+  /* Orange-50 */
+
+  /* Flavor Colors */
+  --flavor-fire: 249, 115, 22;
+  /* Orange-500 - 매운맛 */
+  --flavor-sweet: 244, 114, 182;
+  /* Pink-400 - 단맛 */
+  --flavor-savory: 251, 191, 36;
+  /* Amber-400 - 감칠맛 */
+  --flavor-fresh: 52, 211, 153;
+  /* Emerald-400 - 상큼함 */
+  --flavor-umami: 168, 85, 247;
+  /* Purple-500 - 풍미 */
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #ffffff;
+  background: linear-gradient(135deg, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
   font-family: var(--font-body), sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 .font-display {
@@ -22,4 +37,29 @@ body {
 
 .font-body {
   font-family: var(--font-body), sans-serif;
+}
+
+/* Warm Card Styles */
+.card-warm {
+  @apply bg-white/80 backdrop-blur-sm border border-orange-100 rounded-2xl shadow-sm;
+  @apply hover:shadow-lg hover:shadow-orange-100 hover:border-orange-200;
+  @apply transition-all duration-300;
+}
+
+/* Gradient Button */
+.btn-warm {
+  @apply bg-gradient-to-r from-orange-500 to-amber-500 text-white font-medium;
+  @apply px-4 py-2 rounded-xl shadow-lg shadow-orange-200;
+  @apply hover:from-orange-600 hover:to-amber-600;
+  @apply transition-all duration-200;
+}
+
+/* AI Glow Effect */
+.ai-glow {
+  @apply relative;
+}
+
+.ai-glow::before {
+  content: '';
+  @apply absolute -inset-1 bg-gradient-to-r from-orange-400 to-amber-400 rounded-xl blur opacity-20;
 }

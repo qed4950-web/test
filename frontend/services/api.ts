@@ -436,6 +436,16 @@ export const flavorService = {
         return res.data;
     },
 
+    // --- Accounting (AI CFO) ---
+    detectTaxCredits: async (data: any) => {
+        const res = await api.post('/v1/accounting/detect-credits', data);
+        return res.data;
+    },
+    getCFORadar: async () => {
+        const res = await api.get('/v1/dashboard/cfo-radar');
+        return res.data;
+    },
+
     // --- AI Mutation (New) ---
     mutateRecipe: async (recipe: any, strategy: string, intensity: number = 50) => {
         const res = await api.post('/v1/ai/mutate', { recipe, strategy, intensity });
