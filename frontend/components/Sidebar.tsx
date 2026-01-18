@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, LayoutDashboard, FlaskConical, Gamepad2 } from 'lucide-react';
+import { Dna, Sparkles, FlaskConical, Home } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
-    { name: '대시보드', href: '/', icon: LayoutDashboard },
-    { name: '레퍼런스', href: '/references', icon: Sparkles },
-    { name: '레시피 연구소', href: '/lab', icon: FlaskConical },
-    { name: '플레이그라운드', href: '/admin', icon: Gamepad2 },
+    { name: '홈', href: '/', icon: Home },
+    { name: 'Flavor DNA', href: '/flavor-dna', icon: Dna },
+    { name: 'Vibe Lab', href: '/vibe-lab', icon: Sparkles },
+    { name: 'AI Experiment', href: '/experiment', icon: FlaskConical },
 ];
 
 export default function Sidebar() {
