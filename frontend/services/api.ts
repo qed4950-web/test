@@ -325,6 +325,24 @@ export const flavorService = {
         return res.data;
     },
 
+    // --- Market Analysis ---
+    getMarketGap: async (category: string = "burger") => {
+        const res = await api.get(`/v1/market/gap?category=${category}`);
+        return res.data;
+    },
+
+    // --- Pairing ---
+    getPairingNetwork: async (ingredient: string) => {
+        const res = await api.get(`/v1/pairing/network?ingredient=${ingredient}`);
+        return res.data;
+    },
+
+    // --- Tasting ---
+    simulateTasting: async (data: any) => {
+        const res = await api.post('/v1/tasting/simulate', data);
+        return res.data;
+    },
+
     // --- AI ---
     interpretDistance: async (data: {
         reference1_name: string;
@@ -436,15 +454,7 @@ export const flavorService = {
         return res.data;
     },
 
-    // --- Accounting (AI CFO) ---
-    detectTaxCredits: async (data: any) => {
-        const res = await api.post('/v1/accounting/detect-credits', data);
-        return res.data;
-    },
-    getCFORadar: async () => {
-        const res = await api.get('/v1/dashboard/cfo-radar');
-        return res.data;
-    },
+
 
     // --- AI Mutation (New) ---
     mutateRecipe: async (recipe: any, strategy: string, intensity: number = 50) => {
