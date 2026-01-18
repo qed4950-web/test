@@ -42,3 +42,6 @@ npm-debug.log*
 *.pyc
 .coverage
 htmlcov/
+
+# Legacy code (backup)
+legacy/

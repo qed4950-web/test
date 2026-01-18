@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, BookOpen, Layers, LayoutDashboard, FlaskConical, Gamepad2, PieChart } from 'lucide-react';
+import { Sparkles, BookOpen, Layers, LayoutDashboard, FlaskConical, Gamepad2 } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
@@ -11,7 +11,6 @@ const navItems = [
     { name: '레시피 연구소', href: '/lab', icon: FlaskConical },
     { name: '설계도', href: '/blueprints', icon: BookOpen },
     { name: '전략 분석', href: '/strategies', icon: Layers },
-    { name: '재무/세무', href: '/accounting', icon: PieChart },
     { name: '플레이그라운드', href: '/admin', icon: Gamepad2 },
 ];
 
