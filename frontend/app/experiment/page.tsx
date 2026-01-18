@@ -286,12 +286,12 @@ function RecipeLabContent() {
             {/* Header */}
             <div className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 flex items-center justify-between z-20">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white border border-slate-200 rounded-xl text-indigo-600 shadow-sm">
+                    <div className="p-2 bg-white border border-slate-200 rounded-xl text-orange-600 shadow-sm">
                         <FlaskConical className="w-5 h-5" />
                     </div>
                     <div>
-                        <h1 className="text-lg font-bold tracking-tight text-slate-900">레시피 전략 연구소</h1>
-                        <p className="text-xs text-slate-500">R&D 워크벤치</p>
+                        <h1 className="text-lg font-bold tracking-tight text-slate-900">AI Experiment</h1>
+                        <p className="text-xs text-slate-500">맛 조합 실험실</p>
                     </div>
                 </div>
                 <div className="flex gap-2">

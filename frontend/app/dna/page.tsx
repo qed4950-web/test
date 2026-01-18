@@ -130,11 +130,11 @@ export default function ReferencesPage() {
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-white border border-slate-200 rounded-xl shadow-sm">
-                        <BookOpen className="w-6 h-6 text-indigo-600" />
+                        <BookOpen className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">레퍼런스 (References)</h1>
-                        <p className="text-sm text-slate-500">벤치마크 및 벡터 라이브러리</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Flavor DNA</h1>
+                        <p className="text-sm text-slate-500">맛 벡터 분석 및 시각화</p>
                     </div>
                 </div>
                 <div className="flex gap-2">

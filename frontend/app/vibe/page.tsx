@@ -27,7 +27,7 @@ const TOUR_STEPS: TourStep[] = [
 ];
 
 const AXES = ["매운맛", "단맛", "감칠맛", "상큼함", "풍미"];
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8002";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function AdminPage() {
   const [namingLoading, setNamingLoading] = useState(false);
@@ -383,8 +383,8 @@ export default function AdminPage() {
           <Gamepad2 className="w-6 h-6 text-indigo-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">플레이그라운드</h1>
-          <p className="text-sm text-slate-500">감각 큐레이션 및 레시피 설계 환경</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Vibe Lab</h1>
+          <p className="text-sm text-slate-500">감각 큐레이션 및 공간 설계</p>
         </div>
       </div>
 
